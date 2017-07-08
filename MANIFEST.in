@@ -1,0 +1,2 @@
+recursive-include django_cloudflare_push *.py *.html *.txt
+include README.md LICENSE
