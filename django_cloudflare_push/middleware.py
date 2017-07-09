@@ -40,6 +40,10 @@ def push_middleware(get_response):
         collector = FileCollector()
         storage.staticfiles_storage = staticfiles.staticfiles_storage = storage_factory(collector)()
         response = get_response(request)
-        response["Link"] = ", ".join(["<%s>; rel=preload" % storage.staticfiles_storage.url(f) for f in collector.collection.copy()])
+        try:
+            collection_copy = collector.collection.copy()
+        except AttributeError:  # Python 2.7 compatibility
+            collection_copy = list(collector.collection)
+        response["Link"] = ", ".join(["<%s>; rel=preload" % storage.staticfiles_storage.url(f) for f in collection_copy])
         return response
     return middleware
