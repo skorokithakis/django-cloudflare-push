@@ -44,6 +44,7 @@ def push_middleware(get_response):
             collection_copy = collector.collection.copy()
         except AttributeError:  # Python 2.7 compatibility
             collection_copy = list(collector.collection)
-        response["Link"] = ", ".join(["<%s>; rel=preload" % storage.staticfiles_storage.url(f) for f in collection_copy[:10]])
+        urls = list(set(storage.staticfiles_storage.url(f) for f in collection_copy))
+        response["Link"] = ", ".join(["<%s>; rel=preload" % url for url in urls[:10]])
         return response
     return middleware
