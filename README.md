@@ -20,7 +20,7 @@ Installing django-cloudflare-push
 
 * Install django-cloudflare-push using pip: `pip install django-cloudflare-push`
 
-* Add tokenauth to your authentication backends:
+* Add the middleware to your MIDDLEWARE setting:
 
 ```python
 MIDDLEWARE = (
