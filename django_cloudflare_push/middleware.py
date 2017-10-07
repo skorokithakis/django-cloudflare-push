@@ -35,6 +35,19 @@ def storage_factory(collector):
     return DebugConfiguredStorage
 
 
+def sort_urls(urls):
+    """
+    Order URLs by extension.
+
+    This function accepts a list of URLs and orders them by their extension.
+    CSS files are sorted to the start of the list, then JS, then everything
+    else.
+    """
+    order = {"css": 0, "js": 1}
+    urls.sort(key=lambda x: order.get(x.rsplit(".")[-1], 2))
+    return urls
+
+
 def push_middleware(get_response):
     def middleware(request):
         collector = FileCollector()
@@ -42,6 +55,7 @@ def push_middleware(get_response):
         response = get_response(request)
         collection_copy = list(collector.collection)  # For compatibility with 2.7.
         urls = list(set(storage.staticfiles_storage.url(f) for f in collection_copy))
+        urls = sort_urls(urls)
         response["Link"] = ", ".join(["<%s>; rel=preload" % url for url in urls[:10]])
         return response
     return middleware
