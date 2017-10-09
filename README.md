@@ -11,6 +11,11 @@ header](https://www.cloudflare.com/website-optimization/http2/serverpush/) that
 CloudFlare uses to push the static files to the browser before the latter
 requests them, using HTTP/2 Push.
 
+Somewhat counter-intuitively, django-cloudflare-push is compatible with *any*
+provider that supports HTTP/2 Push using Link headers, which is pretty much
+most of them. For example, the Caddy webserver supports this with the `push`
+directive, and this library will work just fine with that.
+
 [![PyPI version](https://img.shields.io/pypi/v/django-cloudflare-push.svg)](https://pypi.python.org/pypi/django-cloudflare-push)
 
 
