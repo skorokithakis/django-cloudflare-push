@@ -37,6 +37,21 @@ MIDDLEWARE = (
 Done! Your static media will be pushed. You can test the middleware by looking
 for the `Link` header.
 
+Settings
+--------
+
+```python
+CLOUDFLARE_PUSH_EXTENSIONS = ['css', 'js', '*']
+```
+
+Allows you to customize the order and extensions that will be pushed to the
+client. The default setting prioritizes CSS and JavaScript by default. You
+can omit `'*'` to make this setting act as a whitelist for extensions. For
+instance, to push _only_ CSS and JavaScript files:
+
+```python
+CLOUDFLARE_PUSH_EXTENSIONS = ['css', 'js']
+```
 
 License
 -------
