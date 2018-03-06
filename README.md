@@ -37,6 +37,23 @@ MIDDLEWARE = (
 Done! Your static media will be pushed. You can test the middleware by looking
 for the `Link` header.
 
+Settings
+--------
+
+```python
+CLOUDFLARE_PUSH_FILTER = lambda file: True
+```
+
+Allows you to customize what files will be sent to the client to be preloaded.
+This setting should be set to a callable, which accepts a single parameter
+(the name of the file to preload). By default, `django-cloudflare-push` pushes
+all static files.
+
+For instance, to push _only_ static CSS and JavaScript files:
+
+```python
+CLOUDFLARE_PUSH_FILTER = lambda x: x.endswith('.css') or x.endswith('.js')
+```
 
 License
 -------

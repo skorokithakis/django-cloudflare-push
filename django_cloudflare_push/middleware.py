@@ -7,12 +7,15 @@ from django.core.files.storage import get_storage_class
 from django.utils.functional import LazyObject
 
 
+FILE_FILTER = getattr(settings, 'CLOUDFLARE_PUSH_FILTER', lambda x: True)
+
+
 class FileCollector(object):
     def __init__(self):
         self.collection = []
 
     def collect(self, path):
-        if not path.endswith('/'):
+        if not path.endswith('/') and FILE_FILTER(path.lower()):
             self.collection.append(path)
 
 
@@ -38,13 +41,12 @@ def storage_factory(collector):
 def sort_urls(urls):
     """
     Order URLs by extension.
-
     This function accepts a list of URLs and orders them by their extension.
     CSS files are sorted to the start of the list, then JS, then everything
     else.
     """
     order = {"css": 0, "js": 1}
-    urls.sort(key=lambda x: order.get(x.rsplit(".")[-1], 2))
+    urls.sort(key=lambda x: order.get(x.rsplit(".")[-1].lower(), 2))
     return urls
 
 
