@@ -68,11 +68,11 @@ def create_header_content(urls):
     """
     links = []
     for url in urls[:10]:
-        link = "<%s>; rel=preload" % (url, )
         ext = url.rsplit(".")[-1].lower()
-        rsc_as = EXTENSION_AS.get(ext)
-        if rsc_as is not None:
-            link += "; as=" + rsc_as
+        if ext in EXTENSION_AS:
+            link = "<%s>; rel=preload; as=%s" % (url, EXTENSION_AS[ext])
+        else:
+            link = "<%s>; rel=preload" % (url,)
         links.append(link)
     return ", ".join(links)
 
