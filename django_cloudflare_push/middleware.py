@@ -7,6 +7,18 @@ from django.core.files.storage import get_storage_class
 from django.utils.functional import LazyObject
 
 
+EXTENSION_AS = {
+    'js': 'script',
+    'css': 'style',
+    'png': 'image',
+    'jpg': 'image',
+    'jpeg': 'image',
+    'svg': 'image',
+    'gif': 'image',
+    'ttf': 'font',
+    'woff': 'font',
+    'woff2': 'font'
+}
 FILE_FILTER = getattr(settings, 'CLOUDFLARE_PUSH_FILTER', lambda x: True)
 
 
@@ -50,6 +62,21 @@ def sort_urls(urls):
     return urls
 
 
+def create_header_content(urls):
+    """
+    Creates the content for the Link header.
+    """
+    links = []
+    for url in urls[:10]:
+        ext = url.rsplit(".")[-1].lower()
+        if ext in EXTENSION_AS:
+            link = "<%s>; rel=preload; as=%s" % (url, EXTENSION_AS[ext])
+        else:
+            link = "<%s>; rel=preload" % (url,)
+        links.append(link)
+    return ", ".join(links)
+
+
 def push_middleware(get_response):
     def middleware(request):
         collector = FileCollector()
@@ -58,6 +85,6 @@ def push_middleware(get_response):
         collection_copy = list(collector.collection)  # For compatibility with 2.7.
         urls = list(set(storage.staticfiles_storage.url(f) for f in collection_copy))
         urls = sort_urls(urls)
-        response["Link"] = ", ".join(["<%s>; rel=preload" % url for url in urls[:10]])
+        response["Link"] = create_header_content(urls)
         return response
     return middleware
