@@ -55,6 +55,35 @@ For instance, to push _only_ static CSS and JavaScript files:
 CLOUDFLARE_PUSH_FILTER = lambda x: x.endswith('.css') or x.endswith('.js')
 ```
 
+Webserver configuration
+-----------------------
+
+Here's how to configure various webservers to work well with
+`django-cloudflare-push`:
+
+### nginx
+
+If you're running nginx v1.13.9 or later, you can just include the
+`http2_push_preload on` directive in your configuration:
+
+```
+server {
+    ...
+    http2_push_preload on;
+    ...
+}
+```
+
+### Caddy
+
+With Caddy, you can use the [`push` directive](https://caddyserver.com/docs/push):
+
+```
+push
+```
+
+...I know.
+
 License
 -------
 
