@@ -7,7 +7,7 @@ try:
 except ImportError:
     # django.contrib.staticfiles.templatetags.staticfiles removed in django 3.0
     # https://github.com/django/django/blob/a6b3938afc0204093b5356ade2be30b461a698c5/docs/releases/3.0.txt#L661
-    pass
+    from django.contrib.staticfiles import storage as staticfiles
 from django.core.files.storage import get_storage_class
 from django.utils.functional import LazyObject
 
@@ -85,7 +85,7 @@ def create_header_content(urls):
 def push_middleware(get_response):
     def middleware(request):
         collector = FileCollector()
-        storage.staticfiles_storage = storage_factory(collector)()
+        storage.staticfiles_storage = staticfiles.staticfiles_storage = storage_factory(collector)()
         response = get_response(request)
         collection_copy = list(collector.collection)  # For compatibility with 2.7.
         urls = list(set(storage.staticfiles_storage.url(f) for f in collection_copy))
