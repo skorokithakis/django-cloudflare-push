@@ -20,6 +20,7 @@ EXTENSION_AS = {
     'jpeg': 'image',
     'svg': 'image',
     'gif': 'image',
+    'webp': 'image',
     'ttf': 'font',
     'woff': 'font',
     'woff2': 'font'
