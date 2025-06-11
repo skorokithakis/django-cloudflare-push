@@ -8,7 +8,6 @@ except ImportError:
     # django.contrib.staticfiles.templatetags.staticfiles removed in django 3.0
     # https://github.com/django/django/blob/a6b3938afc0204093b5356ade2be30b461a698c5/docs/releases/3.0.txt#L661
     from django.contrib.staticfiles import storage as staticfiles
-from django.core.files.storage import get_storage_class
 from django.utils.functional import LazyObject
 from django.utils.module_loading import import_string
 
