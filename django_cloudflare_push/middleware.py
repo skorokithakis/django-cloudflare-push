@@ -10,6 +10,8 @@ except ImportError:
     from django.contrib.staticfiles import storage as staticfiles
 from django.core.files.storage import get_storage_class
 from django.utils.functional import LazyObject
+from django.utils.module_loading import import_string
+
 
 
 EXTENSION_AS = {
@@ -40,7 +42,8 @@ class FileCollector(object):
 def storage_factory(collector):
     class DebugConfiguredStorage(LazyObject):
         def _setup(self):
-            configured_storage_cls = get_storage_class(settings.STATICFILES_STORAGE)
+            storage_backend = settings.STORAGES["staticfiles"]["BACKEND"]
+            configured_storage_cls = import_string(storage_backend)
 
             class DebugStaticFilesStorage(configured_storage_cls):
 
