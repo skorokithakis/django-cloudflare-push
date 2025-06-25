@@ -1,5 +1,5 @@
 """Parse a page and add a Link header to the request, which CloudFlare can use to push static media to an HTTP/2 client."""
-
+import django
 from django.conf import settings
 from django.contrib.staticfiles import storage
 try:
@@ -8,8 +8,8 @@ except ImportError:
     # django.contrib.staticfiles.templatetags.staticfiles removed in django 3.0
     # https://github.com/django/django/blob/a6b3938afc0204093b5356ade2be30b461a698c5/docs/releases/3.0.txt#L661
     from django.contrib.staticfiles import storage as staticfiles
-from django.core.files.storage import get_storage_class
 from django.utils.functional import LazyObject
+
 
 
 EXTENSION_AS = {
@@ -40,8 +40,14 @@ class FileCollector(object):
 def storage_factory(collector):
     class DebugConfiguredStorage(LazyObject):
         def _setup(self):
-            configured_storage_cls = get_storage_class(settings.STATICFILES_STORAGE)
-
+            # Try Solution to older Django versions using STATICFILES_STORAGE first
+            try:
+                configured_storage_cls = django.core.files.storage.get_storage_class(settings.STATICFILES_STORAGE)
+            # Use the Django 5.1+ STORAGES setting if the first one fails
+            except Exception: # 
+                storage_backend = settings.STORAGES["staticfiles"]["BACKEND"]
+                configured_storage_cls = django.utils.module_loading.import_string(storage_backend)
+ 
             class DebugStaticFilesStorage(configured_storage_cls):
 
                 def __init__(self, collector, *args, **kwargs):

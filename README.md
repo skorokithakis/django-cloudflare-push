@@ -54,6 +54,14 @@ For instance, to push _only_ static CSS and JavaScript files:
 ```python
 CLOUDFLARE_PUSH_FILTER = lambda x: x.endswith('.css') or x.endswith('.js')
 ```
+When using with it with Django >= 5.1 you migth need to set
+```python
+settings.STORAGES["staticfiles"]["BACKEND"]
+```
+instead of 
+```python
+settings.STATICFILES_STORAGE
+```
 
 Webserver configuration
 -----------------------
